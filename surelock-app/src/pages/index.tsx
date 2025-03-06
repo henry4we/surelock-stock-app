@@ -26,7 +26,7 @@ export default function Home() {
 
 
 
-    const [status, setStatus] = useState<ProductStatusType>("all");
+    const [status, setStatus] = useState<ProductStatusType>("active");
     const [minPrice, setMinPrice] = useState<string>("");
     const [maxPrice, setMaxPrice] = useState<string>("");
     const [filtersSet, setFiltersSet] = useState<boolean>(false);
@@ -41,8 +41,10 @@ export default function Home() {
                 ? undefined
                 : `${floatMinPrice}${maxPriceValue ? "," + maxPriceValue : ""}`;
 
-        const filteredStatus =
-            status === "all" ? undefined : status === "active" ? true : false;
+        // const filteredStatus =
+            // status === "" ? undefined : status === "active" ? true : false;
+            const filteredStatus =
+            status === "active" ? undefined : false;
 
         fetch(
             `${SERVER_URL}?${
@@ -69,21 +71,6 @@ export default function Home() {
             })
             .catch(err => console.error(err));
     }, [status, minPrice, maxPrice]);
-
-
-
-
-
-
-
-
-// commmememmme
-
-
-
-
-
-
 
     const handleSearch = useCallback(() => {
         if (input.length < 3)
@@ -197,8 +184,8 @@ export default function Home() {
                                 </span>
                                 <Select
                                     onValueChange={v => {
-                                        if (v === "all") {
-                                            setStatus("all");
+                                        if (v === "active") {
+                                            setStatus("active");
                                             return setSearchResults(null);
                                         }
                                         setStatus(v as ProductStatusType);
@@ -210,7 +197,7 @@ export default function Home() {
                                         <SelectValue placeholder="Select the new status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">All</SelectItem>
+                                        {/* <SelectItem value="all">active</SelectItem> */}
                                         <SelectItem value="active">
                                             Active
                                         </SelectItem>
@@ -225,7 +212,7 @@ export default function Home() {
                             <Button
                                 className="flex items-center"
                                 disabled={
-                                    status === "all" && minPrice.length < 1
+                                    status === "active" && minPrice.length < 1
                                 }
                                 onClick={handleFilters}
                             >
@@ -240,7 +227,7 @@ export default function Home() {
                                         setFiltersSet(false);
                                         setMinPrice("");
                                         setMaxPrice("");
-                                        setStatus("all");
+                                        setStatus("active");
                                         setInput("");
                                         setSearchResults(null);
                                     }}
