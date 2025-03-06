@@ -1,0 +1,1 @@
+export const DEFAULT_URL = "https://surelock-server.onrender.com/api/products";
