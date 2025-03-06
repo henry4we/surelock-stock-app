@@ -2,7 +2,8 @@ import PerProductCard from "@/components/global/per-product-card";
 import ProductCardLoader from "@/components/loaders/product-card-loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DEFAULT_URL } from "@/lib/constants";
+// import { DEFAULT_URL } from "@/lib/constants";
+import { SERVER_URL } from "../lib/constants";
 import { ProductType } from "@/lib/types";
 import { SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +23,13 @@ export default function Home() {
             return toast.error("Search query must be at least 3 characters");
         setLoading(true);
 
-        fetch(`${DEFAULT_URL}?name=${input}`)
+        // fetch(`${DEFAULT_URL}?name=${input}`)
+        fetch(`${SERVER_URL}?name=${input}`, {
+            headers: {
+                Authorization:
+                    "Beearer " + process.env.NEXT_PUBLIC_API_KEY || "",
+            },
+        })
             .then(res => res.json())
             .then((data: ProductType[]) => {
                 setLoading(false);
@@ -35,11 +42,17 @@ export default function Home() {
     }, [input]);
 
     useEffect(() => {
-        fetch(DEFAULT_URL)
+        // fetch(DEFAULT_URL)
+        fetch(`${SERVER_URL}`, {
+            headers: {
+                Authorization:
+                    "Beearer " + process.env.NEXT_PUBLIC_API_KEY || "",
+            },
+        })
             .then(res => res.json())
             .then((data: ProductType[]) => {
-                if (!data || !data.length) return;
-                console.log("Data", data);
+                // if (!data || !data.length) return;
+                // console.log("Data", data);
                 setProducts(data);
             })
             .catch(err => console.error(err));
@@ -77,7 +90,7 @@ export default function Home() {
                         />
                         <Button onClick={handleSearch}>Search</Button>
                     </div>
-                    <div>
+                    <div className="py-2">
                         <Button className="flex items-center" disabled>
                             <SlidersHorizontal />
                             Apply Filters
@@ -99,7 +112,7 @@ export default function Home() {
                 ) : !products.length ? (
                     <p>No Products</p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-x-3">
                         {searchResults?.length
                             ? searchResults.map(product => {
                                   return (
